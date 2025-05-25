@@ -1,0 +1,28 @@
+{
+    "name": "ryanair-flight-scanner",
+    "version": "1.0.0",
+    "description": "A Ryanair flight scanning application to find cheap flights with connections",
+    "main": "api/index.py",
+    "scripts": {
+        "dev": "vercel dev",
+        "build": "echo 'No build step required for Python'",
+        "deploy": "vercel --prod",
+        "test": "python -m pytest tests/ -v"
+    },
+    "keywords": [
+        "ryanair",
+        "flights",
+        "travel",
+        "price-comparison",
+        "vercel",
+        "python"
+    ],
+    "author": "Flight Scanner Team",
+    "license": "MIT",
+    "devDependencies": {
+        "vercel": "^32.0.0"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}
