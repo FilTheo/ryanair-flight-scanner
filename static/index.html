@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ryanair Flight Scanner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Ryanair Flight Scanner</h1>
+    </header>
+
+    <section id="iata-lookup-section">
+        <h2>IATA Code Lookup</h2>
+        <form id="iata-lookup-form">
+            <div>
+                <label for="city-name">City Name:</label>
+                <input type="text" id="city-name" name="cityName" placeholder="e.g., London">
+                <button type="submit">Find IATA Codes</button>
+            </div>
+        </form>
+        <div id="iata-loading-indicator" style="display:none;">Looking up IATA codes...</div>
+        <div id="iata-error-message" style="display:none; color:red;"></div>
+        <div id="iata-results-container">
+            <!-- IATA results will be dynamically inserted here -->
+        </div>
+        <p id="iata-known-code-message" style="display:none; margin-top: 10px;"><em>Tip: If you already know the IATA
+                code, you can enter it directly in the flight search origin/destination fields above.</em></p>
+    </section>
+
+    <main>
+        <section id="search-form-section">
+            <h2>Search Flights</h2>
+            <form id="flight-search-form">
+                <!-- Origin & Destination -->
+                <div>
+                    <label for="origin">Origin (IATA):</label>
+                    <input type="text" id="origin" name="origin" required maxlength="3" pattern="[A-Za-z]{3}"
+                        placeholder="e.g., DUB">
+                    <label for="destination">Destination (IATA or 'ANY'):</label>
+                    <input type="text" id="destination" name="destination" required maxlength="3"
+                        pattern="[A-Za-z]{3}|ANY" placeholder="e.g., STN or ANY">
+                </div>
+
+                <!-- Dates -->
+                <div>
+                    <label for="departureDate">Departure Date:</label>
+                    <input type="date" id="departureDate" name="departureDate" required>
+                    <label for="returnDate" id="returnDateLabel" style="display:none;">Return Date:</label>
+                    <input type="date" id="returnDate" name="returnDate" style="display:none;">
+                </div>
+
+                <!-- Passengers -->
+                <!-- Flexibility & Connections -->
+                <div>
+                    <label for="dateFlexibilityDeparture">Departure Date Flexibility (+/- days):</label>
+                    <input type="number" id="dateFlexibilityDeparture" name="dateFlexibilityDeparture" value="0"
+                        min="0">
+
+                    <label for="dateFlexibilityReturn" id="dateFlexibilityReturnLabel" style="display:none;">Return Date
+                        Flexibility (+/- days):</label>
+                    <input type="number" id="dateFlexibilityReturn" name="dateFlexibilityReturn" value="0" min="0"
+                        style="display:none;">
+                </div>
+                <div>
+                    <label for="maxConnections">Max Connections:</label>
+                    <select id="maxConnections" name="maxConnections">
+                        <option value="0">Direct</option>
+                        <option value="1" selected>One-stop</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="currency">Currency:</label>
+                    <input type="text" id="currency" name="currency" value="EUR" maxlength="3" placeholder="EUR">
+                </div>
+
+                <button type="submit">Search Flights</button>
+            </form>
+        </section>
+
+        <section id="results-section">
+            <h2>Flight Results</h2>
+            <div id="loading-indicator" style="display:none;">Searching for flights...</div>
+            <div id="error-message" style="display:none; color:red;"></div>
+            <div id="results-info" style="display:none; margin-bottom: 15px; font-size: 0.9em; color: #666;">
+                Results are sorted by price (cheapest first). For connecting flights, individual leg prices are shown.
+            </div>
+            <div id="flight-results-container">
+                <!-- Flight options will be dynamically inserted here -->
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Ryanair Flight Scanner</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

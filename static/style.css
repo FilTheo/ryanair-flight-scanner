@@ -1,0 +1,412 @@
+/* Basic Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+
+header {
+    background: #00529B;
+    /* Ryanair Blue */
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+main {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form Styling */
+#search-form-section h2,
+#results-section h2 {
+    margin-bottom: 15px;
+    color: #00529B;
+    border-bottom: 2px solid #FFC107;
+    padding-bottom: 5px;
+}
+
+#flight-search-form div {
+    margin-bottom: 15px;
+}
+
+#flight-search-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#flight-search-form input[type="text"],
+#flight-search-form input[type="date"],
+#flight-search-form input[type="number"],
+#flight-search-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+#flight-search-form input[type="text"]:focus,
+#flight-search-form input[type="date"]:focus,
+#flight-search-form input[type="number"]:focus,
+#flight-search-form select:focus {
+    border-color: #00529B;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 82, 155, 0.3);
+}
+
+/* Group related inputs */
+#flight-search-form>div>input[type="text"]+label,
+#flight-search-form>div>input[type="date"]+label {
+    margin-top: 10px;
+}
+
+#flight-search-form fieldset {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    background-color: #f9f9f9;
+}
+
+#flight-search-form fieldset legend {
+    font-weight: bold;
+    color: #00529B;
+    padding: 0 10px;
+    background-color: #fff;
+}
+
+#flight-search-form fieldset div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+#flight-search-form fieldset label {
+    flex-basis: 150px;
+    margin-bottom: 0;
+}
+
+#flight-search-form fieldset input[type="number"] {
+    flex-grow: 1;
+    width: auto;
+}
+
+#flight-search-form button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    background: #FFC107;
+    /* Ryanair Yellow */
+    color: #333;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+#flight-search-form button[type="submit"]:hover {
+    background: #e0a800;
+}
+
+#flight-search-form button[type="submit"]:active {
+    background: #cc9900;
+}
+
+/* Trip Type Radio Buttons */
+#flight-search-form div:first-child label {
+    display: inline-block;
+    margin-right: 15px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+#flight-search-form div:first-child input[type="radio"] {
+    margin-right: 5px;
+}
+
+/* Results Styling */
+#loading-indicator {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    color: #00529B;
+    font-weight: bold;
+}
+
+#error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 15px;
+    border: 1px solid #c62828;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.flight-option {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease;
+}
+
+.flight-option:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.flight-option h3 {
+    margin-top: 0;
+    color: #00529B;
+    border-bottom: 2px solid #FFC107;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+}
+
+.flight-option .price {
+    font-weight: bold;
+    font-size: 1.4em;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.flight-leg {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ccc;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.flight-leg:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.flight-leg h4 {
+    color: #00529B;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.flight-leg p {
+    margin: 5px 0;
+    font-size: 0.95rem;
+}
+
+.flight-leg strong {
+    color: #333;
+}
+
+.flight-leg .leg-price {
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 3px solid #FFC107;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #00529B;
+}
+
+.layover-info {
+    background-color: #e3f2fd;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border-left: 4px solid #00529B;
+}
+
+.layover-info p {
+    margin: 5px 0;
+    font-weight: bold;
+    color: #00529B;
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 1.1rem;
+}
+
+footer {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    font-size: 0.9em;
+    color: #777;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    main {
+        padding: 15px;
+    }
+
+    #flight-search-form fieldset div {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #flight-search-form fieldset label {
+        margin-bottom: 5px;
+    }
+
+    #flight-search-form fieldset input[type="number"] {
+        width: 100%;
+    }
+
+    .flight-option {
+        padding: 15px;
+    }
+
+    .flight-leg {
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    #flight-search-form div:first-child label {
+        display: block;
+        margin-bottom: 10px;
+        margin-right: 0;
+    }
+
+    .flight-option .price {
+        font-size: 1.2em;
+    }
+
+    .flight-leg h4 {
+        font-size: 1rem;
+    }
+}
+
+/* IATA Lookup Section Styling */
+#iata-lookup-section {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#iata-lookup-section h2 {
+    margin-bottom: 15px;
+    color: #00529B;
+    border-bottom: 2px solid #FFC107;
+    padding-bottom: 5px;
+}
+
+#iata-lookup-form div {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+#iata-lookup-form label {
+    font-weight: bold;
+    margin-bottom: 0;
+    /* Override general label block style */
+}
+
+#iata-lookup-form input[type="text"] {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#iata-lookup-form input[type="text"]:focus {
+    border-color: #00529B;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 82, 155, 0.3);
+}
+
+#iata-lookup-form button[type="submit"] {
+    padding: 10px 20px;
+    background: #00529B;
+    /* Ryanair Blue for this button */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+#iata-lookup-form button[type="submit"]:hover {
+    background: #003d73;
+}
+
+#iata-loading-indicator {
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    color: #00529B;
+}
+
+#iata-error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border: 1px solid #c62828;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.iata-results-list {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.iata-results-list li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+    font-size: 0.9rem;
+}
+
+.iata-results-list li:last-child {
+    border-bottom: none;
+}
