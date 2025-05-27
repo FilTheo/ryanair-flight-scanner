@@ -1,9 +1,12 @@
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from typing import List
 import requests.exceptions
 import logging
 import sys
+import os
 
 # Import your models and client
 from lib.models import AirportInfo, FlightSearchRequest, FlightSearchResponse
@@ -35,35 +38,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Global client instance
-ryanair_client = None
-
-
-@app.on_event("startup")
-async def startup_event():
-    global ryanair_client
-    logger.info("Starting up FastAPI application")
-    ryanair_client = RyanairAPIClient(
-        currency=Config.DEFAULT_CURRENCY,
-    )
-    logger.info("RyanairAPIClient initialized successfully")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    global ryanair_client
-    if ryanair_client:
-        await ryanair_client.close_session()
+# Initialize RyanairAPIClient globally for Vercel (no startup events)
+logger.info("Initializing RyanairAPIClient globally")
+ryanair_client = RyanairAPIClient(
+    currency=Config.DEFAULT_CURRENCY,
+)
+logger.info("RyanairAPIClient initialized successfully")
 
 
 def get_ryanair_client() -> RyanairAPIClient:
     return ryanair_client
 
 
+# Mount static files if they exist
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
 # Root endpoint
 @app.get("/", tags=["Root"])
 async def read_root():
-    """Root endpoint, returns a welcome message."""
+    """Root endpoint, serves the main page or returns a welcome message."""
+    # Try to serve index.html if it exists, otherwise return JSON
+    if os.path.exists("static/index.html"):
+        return FileResponse("static/index.html")
     return {"message": "Welcome to the Ryanair Flight Scanner API"}
 
 
