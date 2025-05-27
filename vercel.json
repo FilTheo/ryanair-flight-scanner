@@ -1,14 +1,9 @@
 {
     "version": 2,
-    "public": "static",
     "rewrites": [
         {
             "source": "/api/(.*)",
             "destination": "/api/index.py"
-        },
-        {
-            "source": "/(.*)",
-            "destination": "/static/$1"
         }
     ],
     "functions": {
