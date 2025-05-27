@@ -1,12 +1,11 @@
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from typing import List
 import requests.exceptions
 import logging
 import sys
 
 # Import your models and client
-from lib.models import AirportInfo, FlightSearchRequest, FlightSearchResponse
+from lib.models import FlightSearchRequest, FlightSearchResponse
 from lib.ryanair_client import RyanairAPIClient
 from lib.flight_analyzer import FlightAnalyzer
 from lib.config import Config
@@ -62,7 +61,7 @@ async def health_check():
 
 
 # Airport endpoints
-@app.get("/api/airports", response_model=List[AirportInfo], tags=["Airports"])
+@app.get("/api/airports", response_model=list, tags=["Airports"])
 async def get_all_airports(client: RyanairAPIClient = Depends(get_ryanair_client)):
     """Get a list of all Ryanair airports."""
     try:
@@ -85,7 +84,7 @@ async def get_all_airports(client: RyanairAPIClient = Depends(get_ryanair_client
 
 @app.get(
     "/api/airports/{origin_airport_code}/destinations",
-    response_model=List[AirportInfo],
+    response_model=list,
     tags=["Airports"],
 )
 async def get_destinations(
@@ -118,7 +117,7 @@ async def get_destinations(
 
 @app.get(
     "/api/airports/iata-lookup/{city_name}",
-    response_model=List[AirportInfo],
+    response_model=list,
     tags=["Airports"],
 )
 async def get_iata_by_city(
