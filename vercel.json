@@ -2,20 +2,25 @@
     "version": 2,
     "builds": [
         {
-            "src": "api/index.py",
+            "src": "main.py",
             "use": "@vercel/python"
         }
     ],
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "/api/index.py"
+            "destination": "/main.py"
         },
         {
             "source": "/((?!api).*)",
             "destination": "/static/$1"
         }
     ],
+    "functions": {
+        "main.py": {
+            "maxDuration": 60
+        }
+    },
     "env": {
         "PYTHONPATH": "."
     },
