@@ -1,8 +1,11 @@
 from fastapi import FastAPI, HTTPException, Body, Depends
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import HTMLResponse
 import requests.exceptions
 import logging
 import sys
+import os
 
 # Import your models and client
 from lib.models import FlightSearchRequest, FlightSearchResponse
@@ -34,6 +37,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
 # Initialize RyanairAPIClient globally for Vercel (no startup events)
 logger.info("Initializing RyanairAPIClient globally")
 ryanair_client = RyanairAPIClient(
@@ -46,10 +54,15 @@ def get_ryanair_client() -> RyanairAPIClient:
     return ryanair_client
 
 
-# Root endpoint
-@app.get("/", tags=["Root"])
+# Root endpoint - serve the frontend
+@app.get("/", response_class=HTMLResponse, tags=["Root"])
 async def read_root():
-    """Root endpoint, returns a welcome message."""
+    """Root endpoint, serves the main HTML file."""
+    static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "public")
+    index_path = os.path.join(static_dir, "index.html")
+    if os.path.exists(index_path):
+        with open(index_path, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
     return {"message": "Welcome to the Ryanair Flight Scanner API"}
 
 

@@ -16,7 +16,7 @@ A web application for finding cheap Ryanair flights with connection analysis, de
 - **Backend**: Python 3.12 (Vercel serverless functions)
 - **Frontend**: HTML, CSS, JavaScript (vanilla)
 - **Deployment**: Vercel
-- **APIs**: Ryanair flight data integration
+- **APIs**: Internal Ryanair API client (serverless-friendly)
 
 ## Project Structure
 
@@ -53,14 +53,26 @@ A web application for finding cheap Ryanair flights with connection analysis, de
    pip install -r requirements.txt
    ```
 
-3. **Run locally with Vercel CLI**
+3. **Run locally** (choose one option):
+
+   **Option A - Simple FastAPI server (recommended):**
+   ```bash
+   python simple_test_server.py
+   ```
+   Then open `http://localhost:8000` in your browser
+
+   **Option B - Flask-based test server:**
+   ```bash
+   python local_test_server.py
+   ```
+   Then open `http://localhost:5001` in your browser
+
+   **Option C - Run with Vercel CLI:**
    ```bash
    npm install -g vercel
    vercel dev
    ```
-
-4. **Access the application**
-   Open `http://localhost:3000` in your browser
+   Then open `http://localhost:3000` in your browser
 
 ### Deployment
 
