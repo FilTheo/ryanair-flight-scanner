@@ -16,9 +16,6 @@
             "destination": "/static/$1"
         }
     ],
-    "env": {
-        "PYTHONPATH": "."
-    },
     "headers": [
         {
             "source": "/api/(.*)",
