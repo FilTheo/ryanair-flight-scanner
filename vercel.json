@@ -1,46 +1,14 @@
 {
     "version": 2,
-    "builds": [
-        {
-            "src": "main.py",
-            "use": "@vercel/python"
-        }
-    ],
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/(.*)",
             "destination": "/main.py"
-        },
-        {
-            "source": "/((?!api).*)",
-            "destination": "/static/$1"
         }
     ],
     "functions": {
         "main.py": {
             "maxDuration": 60
         }
-    },
-    "env": {
-        "PYTHONPATH": "."
-    },
-    "headers": [
-        {
-            "source": "/api/(.*)",
-            "headers": [
-                {
-                    "key": "Access-Control-Allow-Origin",
-                    "value": "*"
-                },
-                {
-                    "key": "Access-Control-Allow-Methods",
-                    "value": "GET, POST, PUT, DELETE, OPTIONS"
-                },
-                {
-                    "key": "Access-Control-Allow-Headers",
-                    "value": "Content-Type, Authorization"
-                }
-            ]
-        }
-    ]
+    }
 }
