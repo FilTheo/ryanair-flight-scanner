@@ -1,6 +1,6 @@
 import logging
 from typing import List
-from .ryanair_internal import Ryanair
+from ryanair import Ryanair
 from datetime import timedelta
 import pandas as pd
 
