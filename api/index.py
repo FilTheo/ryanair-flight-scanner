@@ -35,16 +35,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize RyanairAPIClient globally for Vercel (no startup events)
-logger.info("Initializing RyanairAPIClient globally")
-ryanair_client = RyanairAPIClient(
-    currency=Config.DEFAULT_CURRENCY,
-)
-logger.info("RyanairAPIClient initialized successfully")
+# Initialize RyanairAPIClient lazily for Vercel
+_ryanair_client = None
 
 
 def get_ryanair_client() -> RyanairAPIClient:
-    return ryanair_client
+    global _ryanair_client
+    if _ryanair_client is None:
+        logger.info("Initializing RyanairAPIClient lazily")
+        _ryanair_client = RyanairAPIClient(
+            currency=Config.DEFAULT_CURRENCY,
+        )
+        logger.info("RyanairAPIClient initialized successfully")
+    return _ryanair_client
 
 
 # Root endpoint
