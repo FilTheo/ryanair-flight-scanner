@@ -275,9 +275,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         airports.forEach(airport => {
             const li = document.createElement('li');
-            li.textContent = `${airport.name} (${airport.iata_code}) - ${airport.city_name}, ${airport.country_name}`;
+
+            // Create highlighted IATA code element
+            const iataSpan = document.createElement('span');
+            iataSpan.className = 'iata-code-highlight';
+            iataSpan.textContent = airport.iata_code;
+
+            // Create airport details element
+            const detailsSpan = document.createElement('span');
+            detailsSpan.className = 'airport-details';
+            detailsSpan.textContent = `${airport.name} - ${airport.city_name}, ${airport.country_name}`;
+
+            li.appendChild(iataSpan);
+            li.appendChild(detailsSpan);
             ul.appendChild(li);
         });
+
         iataResultsContainer.appendChild(ul);
         iataKnownCodeMessage.style.display = 'block';
     }

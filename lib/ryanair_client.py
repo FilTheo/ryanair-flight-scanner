@@ -229,44 +229,68 @@ class RyanairAPIClient:
         """Get list of airports from the ryanair-py CSV data"""
         logger.info("Getting airports list")
         try:
+            logger.info(f"Loading airports from CSV URL: {Config.AIRPORTS_CSV_URL}")
             # Load airports data from the CSV URL in config
             df = pd.read_csv(Config.AIRPORTS_CSV_URL, index_col=0)
+            logger.info(f"Successfully loaded CSV with {len(df)} rows")
 
             # Filter for airports that have IATA codes (Ryanair typically uses IATA codes)
             airports_with_iata = df[df["iata_code"].notna()]
+            logger.info(f"Found {len(airports_with_iata)} airports with IATA codes")
 
             # Convert to our AirportInfo model
             airports = []
             for _, row in airports_with_iata.iterrows():
-                airport_info = AirportInfo(
-                    iata_code=row["iata_code"],
-                    name=row["name"],
-                    city_name=(
-                        row["municipality"] if pd.notna(row["municipality"]) else ""
-                    ),
-                    country_name=(
-                        row["iso_country"] if pd.notna(row["iso_country"]) else ""
-                    ),
-                    latitude=(
-                        float(row["latitude_deg"])
-                        if pd.notna(row["latitude_deg"])
-                        else 0.0
-                    ),
-                    longitude=(
-                        float(row["longitude_deg"])
-                        if pd.notna(row["longitude_deg"])
-                        else 0.0
-                    ),
-                )
-                airports.append(airport_info)
+                try:
+                    airport_info = AirportInfo(
+                        iata_code=row["iata_code"],
+                        name=row["name"],
+                        city_name=(
+                            row["municipality"] if pd.notna(row["municipality"]) else ""
+                        ),
+                        country_name=(
+                            row["iso_country"] if pd.notna(row["iso_country"]) else ""
+                        ),
+                        latitude=(
+                            float(row["latitude_deg"])
+                            if pd.notna(row["latitude_deg"])
+                            else 0.0
+                        ),
+                        longitude=(
+                            float(row["longitude_deg"])
+                            if pd.notna(row["longitude_deg"])
+                            else 0.0
+                        ),
+                    )
+                    airports.append(airport_info)
+                except Exception as row_error:
+                    logger.warning(f"Error processing airport row: {row_error}")
+                    continue
 
-            logger.info(f"Loaded {len(airports)} airports with IATA codes")
+            logger.info(f"Successfully processed {len(airports)} airports")
             return airports
 
         except Exception as e:
-            logger.error(f"Error loading airports from CSV: {e}")
-            # Return empty list instead of raising exception to match the current API behavior
-            return []
+            logger.error(f"Error loading airports from CSV: {e}", exc_info=True)
+            # Return a minimal fallback list of major airports
+            logger.info("Returning fallback airport list")
+            return self._get_fallback_airports()
+
+    def _get_fallback_airports(self) -> List[AirportInfo]:
+        """Fallback airport list for when CSV loading fails"""
+        fallback_airports = [
+            AirportInfo(iata_code="DUB", name="Dublin Airport", city_name="Dublin", country_name="Ireland"),
+            AirportInfo(iata_code="STN", name="London Stansted Airport", city_name="London", country_name="United Kingdom"),
+            AirportInfo(iata_code="BGY", name="Milan Bergamo Airport", city_name="Milan", country_name="Italy"),
+            AirportInfo(iata_code="CRL", name="Brussels South Charleroi Airport", city_name="Brussels", country_name="Belgium"),
+            AirportInfo(iata_code="BVA", name="Paris Beauvais Airport", city_name="Paris", country_name="France"),
+            AirportInfo(iata_code="CIA", name="Rome Ciampino Airport", city_name="Rome", country_name="Italy"),
+            AirportInfo(iata_code="MAD", name="Madrid Barajas Airport", city_name="Madrid", country_name="Spain"),
+            AirportInfo(iata_code="BCN", name="Barcelona El Prat Airport", city_name="Barcelona", country_name="Spain"),
+            AirportInfo(iata_code="OPO", name="Porto Airport", city_name="Porto", country_name="Portugal"),
+            AirportInfo(iata_code="EDI", name="Edinburgh Airport", city_name="Edinburgh", country_name="United Kingdom"),
+        ]
+        return fallback_airports
 
     async def get_destinations_from_origin(
         self, origin_airport_code: str

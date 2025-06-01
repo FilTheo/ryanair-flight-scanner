@@ -4,10 +4,16 @@
     "description": "A Ryanair flight scanning application to find cheap flights with connections",
     "main": "api/index.py",
     "scripts": {
-        "dev": "vercel dev",
+        "dev:vercel": "vercel dev --debug",
+        "dev:local": "python main.py",
+        "dev:compare": "echo 'Run both local and vercel versions for comparison' && npm run dev:local & npm run dev:vercel",
         "build": "echo 'No build step required for Python'",
         "deploy": "vercel --prod",
-        "test": "python -m pytest tests/ -v"
+        "deploy:preview": "vercel",
+        "test": "python -m pytest tests/ -v",
+        "test:api": "python scripts/test_api.py",
+        "logs": "vercel logs",
+        "inspect": "vercel dev --inspect"
     },
     "keywords": [
         "ryanair",

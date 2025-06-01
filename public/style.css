@@ -398,15 +398,48 @@ footer {
 .iata-results-list {
     list-style-type: none;
     padding: 0;
-    margin-top: 10px;
+    margin-top: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
 }
 
 .iata-results-list li {
-    padding: 8px;
+    padding: 12px 15px;
     border-bottom: 1px solid #eee;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.iata-results-list li:hover {
+    background-color: #f0f0f0;
 }
 
 .iata-results-list li:last-child {
     border-bottom: none;
+}
+
+.iata-code-highlight {
+    background-color: #00529B;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-family: monospace;
+    margin-right: 12px;
+    font-size: 0.9rem;
+}
+
+.airport-details {
+    flex-grow: 1;
+    color: #333;
+}
+
+.iata-description {
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.4;
 }

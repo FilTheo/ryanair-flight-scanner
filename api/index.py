@@ -4,6 +4,7 @@ from typing import List
 import requests.exceptions
 import logging
 import sys
+import os
 
 # Import your models and client
 from lib.models import AirportInfo, FlightSearchRequest, FlightSearchResponse
@@ -35,16 +36,26 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Initialize RyanairAPIClient globally for Vercel (no startup events)
-logger.info("Initializing RyanairAPIClient globally")
-ryanair_client = RyanairAPIClient(
-    currency=Config.DEFAULT_CURRENCY,
-)
-logger.info("RyanairAPIClient initialized successfully")
-
+# Global variable to store the client instance
+_ryanair_client = None
 
 def get_ryanair_client() -> RyanairAPIClient:
-    return ryanair_client
+    """Lazy initialization of RyanairAPIClient for Vercel compatibility"""
+    global _ryanair_client
+    if _ryanair_client is None:
+        try:
+            logger.info("Initializing RyanairAPIClient")
+            _ryanair_client = RyanairAPIClient(
+                currency=Config.DEFAULT_CURRENCY,
+            )
+            logger.info("RyanairAPIClient initialized successfully")
+        except Exception as e:
+            logger.error(f"Failed to initialize RyanairAPIClient: {e}")
+            raise HTTPException(
+                status_code=500, 
+                detail=f"Failed to initialize flight service: {e}"
+            )
+    return _ryanair_client
 
 
 # Root endpoint
@@ -59,6 +70,27 @@ async def read_root():
 async def health_check():
     """Health check endpoint."""
     return {"status": "ok"}
+
+
+# Test endpoint for debugging
+@app.get("/api/test", tags=["Debug"])
+async def test_endpoint():
+    """Test endpoint to debug Vercel deployment issues."""
+    try:
+        logger.info("Testing RyanairAPIClient initialization")
+        client = get_ryanair_client()
+        logger.info("RyanairAPIClient initialized successfully in test")
+        return {
+            "status": "ok", 
+            "message": "RyanairAPIClient initialized successfully",
+            "currency": client.currency
+        }
+    except Exception as e:
+        logger.error(f"Test endpoint error: {e}", exc_info=True)
+        return {
+            "status": "error",
+            "message": f"Failed to initialize RyanairAPIClient: {e}"
+        }
 
 
 # Airport endpoints
@@ -126,8 +158,12 @@ async def get_iata_by_city(
 ):
     """Get a list of airports and their IATA codes for a specific city."""
     try:
+        logger.info(f"Starting IATA lookup for city: {city_name}")
         airports = await client.get_airports()
+        logger.info(f"Retrieved {len(airports)} airports from client")
+        
         if not airports:
+            logger.warning("No airports returned from client")
             raise HTTPException(
                 status_code=404,
                 detail="No airports could be fetched from Ryanair or its fallback.",
@@ -138,6 +174,8 @@ async def get_iata_by_city(
             for airport in airports
             if city_name.lower() in airport.city_name.lower()
         ]
+        
+        logger.info(f"Found {len(matching_airports)} matching airports for city: {city_name}")
 
         if not matching_airports:
             raise HTTPException(
@@ -145,13 +183,15 @@ async def get_iata_by_city(
                 detail=f"No airports found for city: {city_name}",
             )
         return matching_airports
+    except HTTPException:
+        raise
     except requests.exceptions.RequestException as req_ex:
+        logger.error(f"Request error in IATA lookup: {req_ex}", exc_info=True)
         raise HTTPException(
             status_code=503, detail=f"Error connecting to Ryanair services: {req_ex}"
         )
-    except HTTPException:
-        raise
     except Exception as e:
+        logger.error(f"Unexpected error in IATA lookup: {e}", exc_info=True)
         raise HTTPException(
             status_code=500, detail=f"An unexpected error occurred: {e}"
         )
@@ -203,5 +243,5 @@ async def search_flights_api(
         )
 
 
-# Export the app for Vercel
-handler = app
+# Vercel's Python runtime will automatically pick up the ASGI callable named "app"
+# No additional handler export is required.

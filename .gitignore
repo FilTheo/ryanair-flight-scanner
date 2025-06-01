@@ -63,3 +63,7 @@ logs/
 
 # Cache
 .cache/ 
+
+node_modules/
+scripts/
+.vercel
